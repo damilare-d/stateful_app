@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
+import 'inherited model/learn001.dart';
+
 void main() {
   runApp(MaterialApp(
     home: DApiProvider(api: dApi(), child: const DhomePage()),
@@ -71,6 +73,16 @@ class _DhomePageState extends State<DhomePage> {
                 });
               },
               child: const Text('click'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const MyHomePage()));
+              },
+              child:
+                  const Text('move to screen to learn using inherited model'),
             )
           ],
         ),
