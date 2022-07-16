@@ -2,6 +2,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'dart:developer' as devtool show log;
 
+import 'package:stateful_app/inherited,%20change%20notifier/learn002.dart';
+
 void main() {
   runApp(MaterialApp(
     theme: ThemeData(primarySwatch: Colors.blue),
@@ -50,6 +52,14 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             const ColorWidget(color: AvailableColors.one),
             const ColorWidget(color: AvailableColors.two),
+            TextButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => TheHomePage()));
+              },
+              child: const Text(
+                  'tap to move to inherited notifier and change notifier'),
+            )
           ],
         ),
       ),

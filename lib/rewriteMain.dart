@@ -81,8 +81,8 @@ class _DhomePageState extends State<DhomePage> {
                     MaterialPageRoute(
                         builder: (context) => const MyHomePage()));
               },
-              child:
-                  const Text('move to screen to learn using inherited model'),
+              child: const Text(
+                  ' tap to move to screen to learn using inherited model'),
             )
           ],
         ),
