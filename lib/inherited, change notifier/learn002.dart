@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stateful_app/inherited,%20change%20notifier/reWriteLearn002.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -6,7 +7,8 @@ void main() {
   ));
 }
 
-///the slide data is the state msnsger holding on to the state
+///the slide data is the state messenger holding on to the state
+
 class SliderData extends ChangeNotifier {
   double _value = 0.0;
   double get value => _value;
@@ -35,6 +37,7 @@ final sliderData = SliderData();
 /// how does d inherited notifier knows its supposed to rebuild a  change notier child
 /// through a function the value can be changed after listening to the changeNotifier
 ///
+
 class SliderInheritedNotifier extends InheritedNotifier<SliderData> {
   const SliderInheritedNotifier({
     Key? key,
@@ -64,12 +67,15 @@ class TheHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('The HomePage'),
+      ),
       body: SliderInheritedNotifier(
         sliderData: sliderData,
         child: Builder(builder: (context) {
           return Column(children: [
             Slider(
-                value: 0.0,
+                value: SliderInheritedNotifier.notifyFunction(context),
                 onChanged: (value) {
                   sliderData.value = value;
                 }),
@@ -89,8 +95,18 @@ class TheHomePage extends StatelessWidget {
                     decoration: const BoxDecoration(color: Colors.blue),
                   ),
                 )
-              ].expandEqually().toList(),
+              ].ExpandEqually().toList(),
             ),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            const AnotherHomePage()));
+              },
+              child: const Text("pls move to a replica"),
+            )
           ]);
         }),
       ),
@@ -100,7 +116,7 @@ class TheHomePage extends StatelessWidget {
 
 // a simple extension to make the container expand
 extension ExpandedEqually on Iterable<Widget> {
-  Iterable<Widget> expandEqually() => map((w) => Expanded(
+  Iterable<Widget> ExpandEqually() => map((w) => Expanded(
         child: w,
       ));
 }
