@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'package:flutter/material.dart';
+import 'package:stateful_app/provider%20state%20management/reWriteLearn003.dart';
 import 'package:uuid/uuid.dart';
 import 'package:provider/provider.dart';
 
@@ -88,8 +89,9 @@ class ProviderHomePage extends StatelessWidget {
       body: Column(
         children: [
           Consumer<BreadCrumbProvider>(
-              builder: (context, value, child) =>
-                  BreadCrumbWidget(breadCrumbs: value.items)),
+            builder: (context, value, child) =>
+                BreadCrumbWidget(breadCrumbs: value.items),
+          ),
           TextButton(
             onPressed: () {
               Navigator.pushNamed(context, '/new');
@@ -100,7 +102,16 @@ class ProviderHomePage extends StatelessWidget {
               onPressed: () {
                 context.read<BreadCrumbProvider>().reset();
               },
-              child: const Text('Reset'))
+              child: const Text('Reset')),
+          MaterialButton(
+              child: const Text('click to another mirror version'),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            const XupHomePage()));
+              }),
         ],
       ),
     );
@@ -133,7 +144,7 @@ class _NewBreadCrumbWidgetState extends State<NewBreadCrumbWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Add bread crumb'),
+          title: const Text('Add bread crumb'),
         ),
         body: Column(
           children: [
@@ -153,7 +164,7 @@ class _NewBreadCrumbWidgetState extends State<NewBreadCrumbWidget> {
                     Navigator.of(context).pop();
                   }
                 },
-                child: Text('Add'))
+                child: const Text('Add')),
           ],
         ));
   }

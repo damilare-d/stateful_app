@@ -1,13 +1,19 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'dart:developer' as devtool show log;
 
 import 'package:stateful_app/inherited,%20change%20notifier/learn002.dart';
 
+import '../provider state management/learn003.dart';
+
 void main() {
-  runApp(MaterialApp(
-    theme: ThemeData(primarySwatch: Colors.blue),
-    home: const MyHomePage(),
+  runApp(ChangeNotifierProvider(
+    create: (_) => BreadCrumbProvider(),
+    child: MaterialApp(
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: const MyHomePage(),
+    ),
   ));
 }
 
