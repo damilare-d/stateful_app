@@ -1,7 +1,10 @@
 import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:stateful_app/provider%20state%20management/learn005.dart';
 import 'package:uuid/uuid.dart';
+
+import 'learn004.dart';
 
 void main() {
   runApp(ChangeNotifierProvider(
@@ -53,16 +56,14 @@ class SipJuiceWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: sipJuices.map((sipJuice) {
-          return Text(
-            sipJuice.title,
-            style: TextStyle(
-                color: sipJuice.isActive ? Colors.blue : Colors.black),
-          );
-        }).toList(),
-      ),
+    return Wrap(
+      children: sipJuices.map((sipJuice) {
+        return Text(
+          sipJuice.title,
+          style:
+              TextStyle(color: sipJuice.isActive ? Colors.blue : Colors.black),
+        );
+      }).toList(),
     );
   }
 }
@@ -98,7 +99,15 @@ class _XupHomePageState extends State<XupHomePage> {
               context.read<SipJuiceProvider>().reset();
             },
             child: const Text('Reset'),
-          )
+          ),
+          MaterialButton(
+              child: const Text('click to another mirror version'),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => const OmePage()));
+              }),
         ],
       ),
     );
@@ -131,30 +140,32 @@ class _AddJuiceState extends State<AddJuice> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Add to Juice'),
-      ),
-      body: Column(
-        children: [
-          TextField(
-            controller: controller,
-            decoration: const InputDecoration(hintText: 'sip a juice'),
-          ),
-          TextButton(
-            onPressed: () {
-              final text = controller.text;
-              {
-                if (text.isNotEmpty) {
-                  final sipJuice = SipJuice(isActive: false, name: text);
-                  context.read<SipJuiceProvider>().add(sipJuice);
-                  Navigator.pop(context);
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Add to Juice'),
+        ),
+        body: Column(
+          children: [
+            TextField(
+              controller: controller,
+              decoration: const InputDecoration(hintText: 'sip a juice'),
+            ),
+            TextButton(
+              onPressed: () {
+                final text = controller.text;
+                {
+                  if (text.isNotEmpty) {
+                    final sipJuice = SipJuice(isActive: false, name: text);
+                    context.read<SipJuiceProvider>().add(sipJuice);
+                    Navigator.pop(context);
+                  }
                 }
-              }
-            },
-            child: const Text('Add'),
-          ),
-        ],
+              },
+              child: const Text('Add'),
+            ),
+          ],
+        ),
       ),
     );
   }

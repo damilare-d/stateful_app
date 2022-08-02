@@ -38,14 +38,20 @@ class ExpensiveObject extends BaseObject {}
 class CheapObject extends BaseObject {}
 
 class ObjectProvider extends ChangeNotifier {
-  late String id;
-  late CheapObject _cheapObject;
-  late ExpensiveObject _expensiveObject;
-  late StreamSubscription _cheapObjectStreamSubs;
-  late StreamSubscription _expensiveObjectStreamSubs;
+  String? id;
+  CheapObject? _cheapObject;
+  ExpensiveObject? _expensiveObject;
+  StreamSubscription? _cheapObjectStreamSubs;
+  StreamSubscription? _expensiveObjectStreamSubs;
 
-  CheapObject get cheapObject => _cheapObject;
-  ExpensiveObject get expensiveObject => _expensiveObject;
+  CheapObject? get cheapObject => _cheapObject;
+  ExpensiveObject? get expensiveObject => _expensiveObject;
+
+  @override
+  void notifyListeners() {
+    id = const Uuid().v4();
+    super.notifyListeners();
+  }
 
   void start() {
     _cheapObjectStreamSubs = Stream.periodic(
@@ -55,16 +61,16 @@ class ObjectProvider extends ChangeNotifier {
       notifyListeners();
     });
     _expensiveObjectStreamSubs = Stream.periodic(
-      const Duration(seconds: 1),
+      const Duration(seconds: 30),
     ).listen((_) {
-      _cheapObject = CheapObject();
+      _expensiveObject = ExpensiveObject();
       notifyListeners();
     });
   }
 
   void stop() {
-    _cheapObjectStreamSubs.cancel();
-    _expensiveObjectStreamSubs.cancel();
+    _cheapObjectStreamSubs?.cancel();
+    _expensiveObjectStreamSubs?.cancel();
   }
 }
 
@@ -74,40 +80,44 @@ class OmePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Row(
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width / 2,
-                height: MediaQuery.of(context).size.height / 2,
-                child: CheapObjectWidget(),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width / 2,
-                height: MediaQuery.of(context).size.height / 2,
-                child: ExpensiveObjectWidget(),
-              ),
-            ],
-          ),
-          Container(
-            child: ObjectProviderWidget(),
-          ),
-          Row(children: [
-            TextButton(
-              onPressed: () {
-                context.read<ObjectProvider>().stop();
-              },
-              child: const Text('STOP'),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width / 2,
+                  height: MediaQuery.of(context).size.height / 4,
+                  child: const CheapObjectWidget(),
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width / 2,
+                  height: MediaQuery.of(context).size.height / 4,
+                  child: const ExpensiveObjectWidget(),
+                ),
+              ],
             ),
-            TextButton(
-              onPressed: () {
-                context.read<ObjectProvider>().start();
-              },
-              child: const Text('START'),
+            SizedBox(
+              width: MediaQuery.of(context).size.width / 2,
+              height: MediaQuery.of(context).size.height / 4,
+              child: const ObjectProviderWidget(),
             ),
-          ])
-        ],
+            Row(children: [
+              TextButton(
+                onPressed: () {
+                  context.read<ObjectProvider>().stop();
+                },
+                child: const Text('STOP'),
+              ),
+              TextButton(
+                onPressed: () {
+                  context.read<ObjectProvider>().start();
+                },
+                child: const Text('START'),
+              ),
+            ])
+          ],
+        ),
       ),
     );
   }
@@ -118,7 +128,7 @@ class CheapObjectWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cheapObject = context.select<ObjectProvider, CheapObject>(
+    final cheapObject = context.select<ObjectProvider, CheapObject?>(
       (provider) => provider.cheapObject,
     );
     return Container(
@@ -128,7 +138,7 @@ class CheapObjectWidget extends StatelessWidget {
         children: [
           const Text('Cheap Widget'),
           const Text('Last updated'),
-          Text(cheapObject.lastUpdated),
+          Text(cheapObject?.lastUpdated ?? ''),
         ],
       ),
     );
@@ -140,7 +150,7 @@ class ExpensiveObjectWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final expensiveObject = context.select<ObjectProvider, ExpensiveObject>(
+    final expensiveObject = context.select<ObjectProvider, ExpensiveObject?>(
         (provider) => provider.expensiveObject);
     return Container(
       height: 100,
@@ -149,7 +159,7 @@ class ExpensiveObjectWidget extends StatelessWidget {
         children: [
           const Text('Expensive Widget'),
           const Text('Last updated'),
-          Text(expensiveObject.lastUpdated)
+          Text(expensiveObject?.lastUpdated ?? '')
         ],
       ),
     );
@@ -164,13 +174,12 @@ class ObjectProviderWidget extends StatelessWidget {
     final provider = context.watch<ObjectProvider>();
 
     return Container(
-      height: 100,
       color: Colors.purpleAccent,
       child: Column(
         children: [
-          const Text('Obj=ect Provider Widget'),
+          const Text('Object Provider Widget'),
           const Text('ID'),
-          Text(provider.id),
+          Text(provider.id ?? ''),
         ],
       ),
     );

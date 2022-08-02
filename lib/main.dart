@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:stateful_app/rewriteMain.dart';
 import 'package:uuid/uuid.dart';
 
 void main() {
-  runApp(MaterialApp(
-    home: ApiProvider(api: Api(), child: const HomePage()),
-  ));
+  runApp(
+    MaterialApp(
+      home: ApiProvider(api: Api(), child: const HomePage()),
+    ),
+  );
 }
 
 class ApiProvider extends InheritedWidget {

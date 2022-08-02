@@ -3,12 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:stateful_app/provider%20state%20management/reWriteLearn003.dart';
 import 'package:uuid/uuid.dart';
 import 'package:provider/provider.dart';
+import 'learn004.dart';
 
 void main() {
-  runApp(ChangeNotifierProvider(
-    create: (_) => BreadCrumbProvider(),
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider<BreadCrumbProvider>(
+          create: (_) => BreadCrumbProvider()),
+      ChangeNotifierProvider<SipJuiceProvider>(
+        create: (_) => SipJuiceProvider(),
+      ),
+      ChangeNotifierProvider<ObjectProvider>(create: (_) => ObjectProvider()),
+    ],
     child: MaterialApp(
-      home: ProviderHomePage(),
+      home: const ProviderHomePage(),
       routes: {'/new': (context) => const NewBreadCrumbWidget()},
     ),
   ));

@@ -38,7 +38,7 @@ class OmeePage extends StatelessWidget {
         child: Column(
           children: [
             Row(
-              children: [
+              children: const [
                 SecondsWidget(),
                 MinutesWidget(),
               ],
